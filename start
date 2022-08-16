@@ -1,0 +1,75 @@
+#!/bin/bash
+
+sudo apt-get update
+sudo apt-get install python3-venv
+
+PWD=`pwd`
+BACKEND_PROC=`sudo netstat -tulnp 2>/dev/null | grep :5005 | egrep -o "[0-9]+\/python3" | sed -e 's/\/.*//'`
+FRONTEND_PROC=`sudo netstat -tulnp 2>/dev/null | grep :3000 | egrep -o "[0-9]+\/node" | sed -e 's/\/.*//'`
+if [[ $BACKEND_PROC ]]; then
+	sudo kill "$BACKEND_PROC"
+	echo "Flask app stopped."
+fi
+if [[ $FRONTEND_PROC ]]; then
+	sudo kill "$FRONTEND_PROC"
+	echo "Client app stopped."
+fi
+
+readonly venv="./.pms-backend-env/bin/activate"
+PMS_SECRET_KEY="\xe4\x0c\x91\xd8\xc3\xa6\xb4\x17N\x83\xb3n\xb8I[\x9b0\x18V\x08,\x98\xcc8"
+FLASK_APP=backend
+FLASK_DEBUG=1
+
+	
+cd ./backend || (echo "error: ${PWD}/backend/: dir not found."1>&2 && exit 1)
+if [[ ! -f "./.pms-backend-env/bin/activate" ]]; then
+	echo "Creating environment..."
+	python3 -m venv ./.pms-backend-env || (echo "error: Failed to create virtual environment."1>&2 && exit 1)
+	sleep 2
+	source ${venv}
+	ENV=`printenv | grep VIRTUAL_ENV | sed 's/^.*\///g' | sed 's/^\.//'`
+	if [[ ! $ENV == "pms-backend-env" ]]; then
+		echo "error: Failed to activate virtual environment" 1>&2
+		exit 1
+	fi
+	echo "Activated env: ${ENV}" 
+	sleep 1
+	echo "Installing requirements..."
+	if [[ ! -f "./requirements.txt" ]]; then
+		echo "error: ${PWD}/requirements.txt: file not found."1>&2 && exit 1
+	fi
+	python3 -m pip install -r ./requirements.txt
+	
+else
+	source ${venv}
+	ENV=`printenv | grep VIRTUAL_ENV | sed 's/^.*\///g' | sed 's/^\.//'`
+	if [[ ! $ENV == "pms-backend-env" ]]; then
+		echo "error: Failed to activate virtual environment" 1>&2
+		exit 1
+	fi
+	echo "Activated env: ${ENV}" 
+fi
+
+echo "Starting Flask..."
+export PMS_SECRET_KEY=${PMS_SECRET_KEY}
+export FLASK_APP=${FLASK_APP}
+export FLASK_DEBUG=${FLASK_DEBUG}
+gnome-terminal --working-directory="$PWD" -- flask run --port 5005
+
+
+cd ../frontend || (echo "error: ${PWD}/frontend/: dir not found."1>&2 && exit 1)
+echo "Starting Client..."
+gnome-terminal --working-directory="$PWD" --command=\
+"bash -c 'yarn start || (echo Setting up frontend... && yarn install && yarn start)'" 2>/dev/null
+cd ..
+
+exec bash
+
+
+
+
+
+	
+
+
+

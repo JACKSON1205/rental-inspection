@@ -1,0 +1,10 @@
+#!/bin/bash
+
+yes Y | sudo apt remove python3-venv
+yes Y | sudo apt remove gnome-terminal
+yes Y | sudo apt remove curl
+yes Y | sudo apt remove postgresql
+yes Y | sudo apt remove cmdtest
+yes Y | sudo apt remove yarn
+
+exec bash

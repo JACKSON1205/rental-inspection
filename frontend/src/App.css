@@ -1,0 +1,602 @@
+@import "../node_modules/react-dual-listbox/lib/react-dual-listbox.css";
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+body {
+  margin: 0;
+}
+/* img {
+  width: 100vw;
+  height: 100vh;
+  height: auto;
+} */
+#about_img1 {
+  width: 100vw;
+  height: 100vh;
+  height: auto;
+}
+#about_img2 {
+  width: 100vw;
+  height: 100vh;
+  height: auto;
+}
+#about_img3 {
+  width: 100vw;
+  height: 100vh;
+  height: auto;
+}
+#contact_img1 {
+  width: 100vw;
+  height: 100vh;
+  height: auto;
+}
+#contact_img2 {
+  width: 100vw;
+  height: 100vh;
+  height: auto;
+}
+#contact_img3 {
+  width: 100vw;
+  height: 100vh;
+  height: auto;
+}
+/* a {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+} */
+#about_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#about_button.fill {
+  color: #000;
+  background: #fff;
+}
+#about_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#about_button.fill:active {
+  filter: opacity(0.8);
+}
+#contact_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#contact_button.fill {
+  color: #000;
+  background: #fff;
+}
+#contact_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#contact_button.fill:active {
+  filter: opacity(0.8);
+}
+#landing_login_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#landing_login_button.fill {
+  color: #000;
+  background: #fff;
+}
+#landing_login_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#landing_login_button.fill:active {
+  filter: opacity(0.8);
+}
+#about_home_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#about_home_button.fill {
+  color: #000;
+  background: #fff;
+}
+#about_home_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#about_home_button.fill:active {
+  filter: opacity(0.8);
+}
+#about_contact_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#about_contact_button.fill {
+  color: #000;
+  background: #fff;
+}
+#about_contact_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#about_contact_button.fill:active {
+  filter: opacity(0.8);
+}
+#about_login_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#about_login_button.fill {
+  color: #000;
+  background: #fff;
+}
+#about_login_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#about_login_button.fill:active {
+  filter: opacity(0.8);
+}
+#contact_home_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#contact_home_button.fill {
+  color: #000;
+  background: #fff;
+}
+#contact_home_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#contact_home_button.fill:active {
+  filter: opacity(0.8);
+}
+#contact_about_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#contact_about_button.fill {
+  color: #000;
+  background: #fff;
+}
+#contact_about_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#contact_about_button.fill:active {
+  filter: opacity(0.8);
+}
+#contact_login_button {
+  color: white;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#contact_login_button.fill {
+  color: #000;
+  background: #fff;
+}
+#contact_login_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#contact_login_button.fill:active {
+  filter: opacity(0.8);
+}
+.btns {
+  position: absolute;
+  top: 35px;
+  right: 20px;
+  display: flex;
+}
+.ctn2 {
+  width: 100vw;
+  height: auto;
+  position: relative;
+}
+.ctn2 img {
+  width: 100%;
+  height: 100%;
+}
+
+.btn {
+  position: absolute;
+  font-size: 1vw;
+  background: #fff;
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: #bdb1c3;
+  cursor: pointer;
+  user-select: none;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn.tenant {
+  top: 23%;
+  left: 50%;
+}
+.btn.manager {
+  top: 56%;
+  right: 54%;
+}
+.btn.owner {
+  top: 87%;
+  left: 50%;
+}
+
+
+.ctn3 {
+  width: 100vw;
+  height: auto;
+  position: relative;
+
+}
+.ctn3 img {
+  width: 100%;
+  height: 100%;
+}
+.btn3 {
+  position: absolute;
+  font-size: 1vw;
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: #000;
+  cursor: pointer;
+  user-select: all;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.btn3.about {
+  top: 70%;
+  right: 20.2%;
+}
+.btn3.start {
+  top: 75%;
+  right: 18%;
+}
+
+/* b {
+  color: #000;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+b.fill {
+  color: #fff;
+  background: #000;
+}
+b.fill:hover {
+  color: #333;
+  background: #eee;
+}
+b.fill:active {
+  filter: opacity(0.8);
+} */
+
+#about_about_button {
+  color: #000;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#about_about_button.fill {
+  color: #fff;
+  background: #000;
+}
+#about_about_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#about_about_button.fill:active {
+  filter: opacity(0.8);
+}
+#contact_contact_button {
+  color: #000;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 800;
+}
+#contact_contact_button.fill {
+  color: #fff;
+  background: #000;
+}
+#contact_contact_button.fill:hover {
+  color: #333;
+  background: #eee;
+}
+#contact_contact_button.fill:active {
+  filter: opacity(0.8);
+}
+.btns {
+  position: absolute;
+  top: 35px;
+  right: 20px;
+  display: flex;
+}
+#landing_word{
+  color: #000;
+  font-size: 11px;
+  text-decoration: unset;
+  padding: 10px 20px;
+  font-weight: 80;
+}
+.btn4 {
+  position: absolute;
+  font-size: 2vw;
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: #fff;
+  cursor: text;
+  user-select: all;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.btn40 {
+  position: relative;
+  font-size: 2vw;
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: #fff;
+  cursor: text;
+  user-select: all;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.btn41 {
+  position: absolute;
+  font-size: 0.8vw;
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: #fff;
+  cursor: text;
+  user-select: all;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.btn42 {
+  position: relative;
+  font-size: 1vw;
+  padding: 0.11px 0.1px;
+  border-radius: 2px;
+  color: #fff;
+  cursor: text;
+  user-select: all;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.btn4.list {
+  top: 69%;
+  right: 32%;
+}
+.btn4.forget {
+  top: 40%;
+  right: 53%;
+}
+.btn4.tenant {
+  top: 5%;
+  right: 33.5%;
+}
+.btn4.find {
+  top: -30%;
+  right: 53%;
+}
+.btn41.tenant2 {
+  top: 14%;
+  right: 22.9%;
+}
+.btn41.mgr {
+  top: 46%;
+  right: 53%;
+}
+.btn41.owner {
+  top: 78%;
+  right: 23.5%;
+}
+.btn40.what {
+  top: 850px;
+  right: 0%;
+}
+.btn42.before {
+  top: 950px;
+  right: 20%;
+}
+.btn42.alexa {
+  top: 1000px;
+  right: 20%;
+}
+.btn42.el {
+  top: 840px;
+  left: 55%;
+  width: 30%
+}
+.btn42.eli {
+  top: 890px;
+  left: 60%;
+  width: 500px;
+}
+.btn42.my {
+  top: 1060px;
+  right: 20%;
+}
+.btn42.sa {
+  top: 1100px;
+  right: 20%;
+}
+.btn42.let {
+  top: 950px;
+  left: 55%;
+  width: 30%
+}
+.btn42.vic {
+  top:990px;
+  left: 60%;
+  width: 500px;
+}
+
+
+.btn5 {
+  position: absolute;
+  font-size: 2vw;
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: #000;
+  cursor: text;
+  user-select: all;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.btn52 {
+  position: relative;
+  font-size: 0.99vw;
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: #000;
+  cursor: text;
+  user-select: all;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.btn523 {
+  position: relative;
+  font-size: 2vw;
+  padding: 10px 20px;
+  border-radius: 2px;
+  color: #000;
+  cursor: text;
+  user-select: all;
+  height: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.btn5.before {
+  top: 10%;
+  right: 28%;
+}
+.btn5.the {
+  top: 15%;
+  right: 30%;
+}
+.btn5.p {
+  top: 20%;
+  right: 46%;
+}
+.btn5.a {
+  top: 25%;
+  right: 48.5%;
+}
+.btn523.how {
+  top: -1250px;
+  right: 0%;
+}
+.btn52.home {
+  top: 20px;
+  right: 0%;
+}
+.btn523.we {
+  top: -180px;
+  right:20%;
+}
+.btn52.if {
+  top: -170px;
+  left: 19.5%;
+  width: 33%
+}
+.btn523.email {
+  top: -989px;
+  left: 60%;
+  width: 150px
+}
+.btn52.su {
+  top: -810px;
+  left: 51.2%;
+  width: 30%
+}
+.btn52.number {
+  top: -298px;
+  left: 49%;
+  width: 29%
+}
+.btn523.phone {
+  top: -1020px;
+  left: 47.5%;
+  width: 30%
+}

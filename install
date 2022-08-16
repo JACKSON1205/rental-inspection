@@ -1,0 +1,108 @@
+#!/bin/bash
+
+sudo apt-get update
+sudo apt-get install python3-venv
+yes Y | sudo apt install python3-pip
+yes Y | sudo apt install gnome-terminal
+yes Y | sudo apt install curl
+yes Y | sudo apt install postgresql
+yes Y | sudo apt remove cmdtest
+yes Y | sudo apt remove yarn
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update
+yes Y | sudo apt-get install yarn
+sudo mkdir /usr/local/lib/node/nodejs
+sudo tar -xJvf ./frontend/node-v16.13.0-linux-x64.tar.xz
+sudo rsync -a ./node-v16.13.0-linux-x64/* /usr/local/lib/node/nodejs/
+echo "export NODEJS_HOME=/usr/local/lib/node/nodejs" >> ~/.profile
+echo "export PATH=\$NODEJS_HOME/bin:\$PATH" >> ~/.profile
+. ~/.profile
+
+PWD=`pwd`
+BACKEND_PROC=`sudo netstat -tulnp 2>/dev/null | grep :5005 | egrep -o "[0-9]+\/python3" | sed -e 's/\/.*//'`
+FRONTEND_PROC=`sudo netstat -tulnp 2>/dev/null | grep :3000 | egrep -o "[0-9]+\/node" | sed -e 's/\/.*//'`
+if [[ $BACKEND_PROC ]]; then
+	sudo kill "$BACKEND_PROC"
+	echo "Flask app stopped."
+fi
+if [[ $FRONTEND_PROC ]]; then
+	sudo kill "$FRONTEND_PROC"
+	echo "Client app stopped."
+fi
+
+readonly venv="./.pms-backend-env/bin/activate"
+PMS_SECRET_KEY="\xe4\x0c\x91\xd8\xc3\xa6\xb4\x17N\x83\xb3n\xb8I[\x9b0\x18V\x08,\x98\xcc8"
+MAPBOX_API_KEY="pk.eyJ1IjoiZHdvb2xub3VnaCIsImEiOiJja3YzZjhnaGcwa3ZnMm9wNm5oaXh3MTYxIn0.2AEDoHcYKsk_ta0AxPXeBA"
+FLASK_APP=backend
+FLASK_DEBUG=1
+
+	
+cd ./backend || (echo "error: ${PWD}/backend/: dir not found."1>&2 && exit 1)
+if [[ ! -f "./.pms-backend-env/bin/activate" ]]; then
+	echo "Creating environment..."
+	python3 -m venv ./.pms-backend-env || (echo "error: Failed to create virtual environment."1>&2 && exit 1)
+	sleep 2
+	source ${venv}
+	ENV=`printenv | grep VIRTUAL_ENV | sed 's/^.*\///g' | sed 's/^\.//'`
+	if [[ ! $ENV == "pms-backend-env" ]]; then
+		echo "error: Failed to activate virtual environment" 1>&2
+		exit 1
+	fi
+	echo "Activated env: ${ENV}" 
+	sleep 1
+	echo "Installing requirements..."
+	if [[ ! -f "./requirements.txt" ]]; then
+		echo "error: ${PWD}/requirements.txt: file not found."1>&2 && exit 1
+	fi
+	pip install wheel
+	python3 -m pip install -r ./requirements.txt
+	
+else
+	source ${venv}
+	ENV=`printenv | grep VIRTUAL_ENV | sed 's/^.*\///g' | sed 's/^\.//'`
+	if [[ ! $ENV == "pms-backend-env" ]]; then
+		echo "error: Failed to activate virtual environment" 1>&2
+		exit 1
+	fi
+	echo "Activated env: ${ENV}" 
+fi
+
+echo "Creating Database..."
+#POSTGRESQL_PATH=`sudo su postgres -c "psql -c 'show hba_file'" | grep '\/main' | sed 's/ //'`
+cd ../database
+sudo service postgresql restart || sudo service postgresql start
+echo "DO \$\$ BEGIN CREATE USER admin WITH PASSWORD 'bigai'; EXCEPTION WHEN duplicate_object THEN RAISE NOTICE '%, skipping', SQLERRM USING ERRCODE = SQLSTATE; END \$\$; alter role admin superuser; \\q" | sudo -u postgres psql
+
+echo "ALTER USER admin with encrypted password 'bigai'; alter role admin superuser; \\q" | sudo -u postgres psql
+
+(echo "SELECT 1 FROM pg_database WHERE datname = 'pmsdb';" | sudo -u postgres psql | grep -q 1) || (echo "CREATE DATABASE pmsdb;" | sudo -u postgres psql)
+
+echo "GRANT ALL PRIVILEGES ON DATABASE pmsdb to admin; \\q" | sudo -u postgres psql
+
+PGPASSWORD=bigai psql -v ON_ERROR_STOP=1 -1 -h 127.0.0.1 -p 5432 -f create.ddl pmsdb -U admin
+
+cd ../backend
+echo "Starting Flask..."
+export PMS_SECRET_KEY=${PMS_SECRET_KEY}
+export MAPBOX_API_KEY=${MAPBOX_API_KEY}
+export FLASK_APP=${FLASK_APP}
+export FLASK_DEBUG=${FLASK_DEBUG} 
+gnome-terminal --working-directory="$PWD" -- flask run --port 5005
+
+
+cd ../frontend || (echo "error: ${PWD}/frontend/: dir not found."1>&2 && exit 1)
+echo "Starting Client..."
+gnome-terminal --working-directory="$PWD" --command="bash -c 'yarn start || (echo Setting up frontend... && yarn install && yarn start)'" 2>/dev/null
+cd ..
+
+exec bash
+
+
+
+
+
+	
+
+
+

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+sudo apt update
+sudo apt install postgresql
+
+echo "CREATE USER admin WITH PASSWORD 'bigai'; alter role admin superuser; CREATE DATABASE pmsdb; GRANT ALL PRIVILEGES ON DATABASE pmsdb to admin; \\q" | sudo su - postgres psql
+
+PGPASSWORD=bigai psql -v ON_ERROR_STOP=1 -1 -h 127.0.0.1 -p 5432 -f create.ddl pmsdb -U admin
+
+curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
+sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
+
+sudo apt install pgadmin4
+sudo /usr/pgadmin4/bin/setup-web.sh
+

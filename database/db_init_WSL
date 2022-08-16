@@ -1,0 +1,10 @@
+#!/bin/bash
+
+sudo apt update
+sudo apt -y install postgresql-12 postgresql-client-12
+
+sudo service postgresql start
+
+echo "CREATE USER admin WITH PASSWORD 'bigai'; alter role admin superuser; CREATE DATABASE pmsdb; GRANT ALL PRIVILEGES ON DATABASE pmsdb to admin; \\q" | sudo -u postgres psql
+
+PGPASSWORD=bigai psql -v ON_ERROR_STOP=1 -1 -h 127.0.0.1 -p 5432 -f create.ddl pmsdb -U admin
